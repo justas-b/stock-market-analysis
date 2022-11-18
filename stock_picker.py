@@ -53,11 +53,31 @@ def stock_search(term):
             for match in matches:
                 matches_list.append(match["1. symbol"])
             
-            user_choice = Prompt.ask("Please choose out of the following tickers", choices = matches_list)
+            user_choice = Prompt.ask("Please choose out of the following tickers", choices =matches_list)
             return [match for match in matches if match["1. symbol"] == user_choice][0]
     else:
         console.print(f"{term} not found!")
         return 0
+
+
+def month_analysis(symbol):
+    response = requests.get(API_URL + f"function=TIME_SERIES_MONTHLY&symbol={symbol}&apikey={API_KEY}")
+    records = response.json()["Monthly Time Series"]
+
+    month_table = Table(title = f"{symbol} Monthly Stock Price")
+    column_styles = ["blue3", "bright_red", "bright_green", "bright_magenta"]
+    table_columns = ["Date", "Open Price", "Close Price", "Price Difference"]
+
+    for index, column in enumerate(table_columns):
+        month_table.add_column(column, style = column_styles[index])
+
+    for date in records:
+        open_price = float(records[date]["1. open"])
+        close_price = float(records[date]["4. close"])
+        price_difference = close_price - open_price
+        month_table.add_row(date, str(open_price), str(close_price), str(price_difference))
+    
+    console.print(month_table)
 
 
 if __name__ == "__main__":
@@ -68,5 +88,6 @@ if __name__ == "__main__":
         stock_input = Prompt.ask("Please search for a stock")
         stock = stock_search(stock_input)
 
-    display_detailed_company(stock)
+    # display_detailed_company(stock)
+    month_analysis(stock["1. symbol"])
 
