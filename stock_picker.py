@@ -37,11 +37,17 @@ def stock_search(term):
             user_choice = Prompt.ask("Please choose out of the following tickers", choices=matches_list)
             return [match for match in matches if match["1. symbol"] == user_choice][0]
     else:
-        return f"No matches for {term} found!" 
+        console.print(f"{term} not found!")
+        return 0
 
 
 
 if __name__ == "__main__":
     stock_input = Prompt.ask("Please search for a stock: ")
     stock = stock_search(stock_input)
+
+    while not stock:
+        stock_input = Prompt.ask("Please search for a stock: ")
+        stock = stock_search(stock_input)
+
     display_stock(stock)
