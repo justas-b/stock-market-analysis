@@ -4,10 +4,14 @@ from rich.prompt import Prompt
 from rich.console import Console
 from rich.table import Table
 
-# API_KEY =
+API_KEY = 0 # enter your API key
 API_URL = "https://www.alphavantage.co/query?"
 
 console = Console(record = True)
+
+if not API_KEY:
+    with open('apikey.txt', 'r') as f:
+        API_KEY = f.readline()
 
 
 def display_basic_company(company):
