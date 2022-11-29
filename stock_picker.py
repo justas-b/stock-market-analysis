@@ -96,7 +96,7 @@ def history_analysis(symbol, option):
     for index, column in enumerate(table_columns):
         history_table.add_column(column, style = column_styles[index])
 
-    for date in records:
+    for date in list(records.keys())[0:10]:
         open_price = float(records[date]["1. open"])
         close_price = float(records[date]["4. close"])
         price_difference = round(close_price - open_price, 2)
@@ -119,15 +119,18 @@ def display_information(user_input, stock):
 
 if __name__ == "__main__":
     stock_input = Prompt.ask("Please search for a stock")
+    user_input = True
     stock = stock_search(stock_input)
 
     while not stock:
         stock_input = Prompt.ask("Please search for a stock")
         stock = stock_search(stock_input)
 
-    user_input = Prompt.ask("Please choose what information you would like displayed: ", 
-                            choices = ["Company Information", 
-                                        "Weekly Performance", 
-                                        "Monthly Performance"])
-    display_information(user_input, stock)
+    while user_input != "Exit":
+        user_input = Prompt.ask("Please choose what information you would like displayed: ", 
+                                choices = ["Company Information", 
+                                            "Weekly Performance", 
+                                            "Monthly Performance",
+                                            "Exit"])
+        display_information(user_input, stock)
 
